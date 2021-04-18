@@ -1,0 +1,19 @@
+{
+  "name": "@vinvincent/uploadfile",
+  "version": "1.0.3",
+  "description": "a middleware for helping uploadfile easier in express",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "express",
+    "middleware"
+  ],
+  "author": "vinvincent",
+  "license": "ISC",
+  "dependencies": {
+    "formidable": "^1.2.2",
+    "string-random": "^0.1.3"
+  }
+}
