@@ -1,6 +1,6 @@
 {
   "name": "@vinvincent/uploadfile",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "a middleware for helping uploadfile easier in express",
   "main": "index.js",
   "scripts": {

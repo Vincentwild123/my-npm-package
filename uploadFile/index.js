@@ -14,12 +14,16 @@ module.exports = function uploadFile(uploadFolder) {
                 if (err) throw new Error('Some error appear in the function form.parse');
                 //no file upload
                 if (!files || !files.file) next();
-                if (files.file.length > 1) {
-                    for (const file of files.file) {
-                        fileParser(file);
+                try {
+                    if (files.file.length > 1) {
+                        for (const file of files.file) {
+                            fileParser(file);
+                        }
+                    } else {
+                        fileParser(files.file)
                     }
-                } else {
-                    fileParser(files.file)
+                } catch (err) {
+                    throw new Error('Some error appear in the function fileParser ', err.stack)
                 }
                 next();
             });
@@ -35,19 +39,26 @@ module.exports = function uploadFile(uploadFolder) {
         fileMetaData.fileName = file.name;
         fileMetaData.tempPath = file.path;
         fileMetaData.fileSize = file.size;
-
         //the target PATH from user to save files , default value is `${process.cwd()}+"/uploadfiles"`
         //create the folder
-        if (!fs.existsSync(uploadFolder)) {
-            fs.mkdirSync(uploadFolder);
+        try {
+            if (!fs.existsSync(uploadFolder)) {
+                fs.mkdirSync(uploadFolder);
+            }
+        } catch (err) {
+            throw new Error('Some error appear in the function fs.mkdirSync', err.stack)
         }
         let targetPath = path.join(uploadFolder, fileMetaData.fileName);
         //Check for duplicate file names
         while (fs.existsSync(targetPath)) {
             //the file path exited,create a hash file name
-            const randomStr = stringRandom(8, {
-                number: false
-            })
+            try {
+                const randomStr = stringRandom(8, {
+                    number: false
+                })
+            } catch (err) {
+                throw new Error('Some error appear in the function stringRandom', err.stack)
+            }
             const fileCommonName = fileMetaData.fileName.split('.')[0];
             const fileExtendName = fileMetaData.fileName.split('.')[1];
             targetPath = path.join(uploadFolder, (fileCommonName + "-" + randomStr + "." + fileExtendName));
@@ -55,7 +66,7 @@ module.exports = function uploadFile(uploadFolder) {
         try {
             fs.renameSync(fileMetaData.tempPath, targetPath)
         } catch (err) {
-            throw new Error('Some error appear in the function fs.renameSync')
+            throw new Error('Some error appear in the function fs.renameSync ', err.stack)
         }
     }
 }
