@@ -13,7 +13,7 @@ module.exports = function uploadFile(uploadFolder) {
             form.parse(req, function (err, fields, files) {
                 if (err) throw new Error('Some error appear in the function form.parse');
                 //no file upload
-                if (!files || !files.file) next();
+                if (!files || !files.file || !files.file.length) next();
                 try {
                     if (files.file.length > 1) {
                         for (const file of files.file) {
